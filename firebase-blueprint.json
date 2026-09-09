@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Portfolio": {
+      "title": "Portfolio",
+      "description": "User investment portfolio data including lots, deposits and historical net worth",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the owner user"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        },
+        "moneyInvested": {
+          "type": "number",
+          "description": "Total sum of all deposits in EUR"
+        },
+        "currentCapitalValue": {
+          "type": "number",
+          "description": "Current total capital value in EUR"
+        },
+        "positions": {
+          "type": "array",
+          "description": "List of individual lots"
+        },
+        "deposits": {
+          "type": "array",
+          "description": "List of individual deposit records"
+        },
+        "netWorthHistory": {
+          "type": "array",
+          "description": "Reconstructed daily net worth historical series in EUR"
+        }
+      },
+      "required": ["userId", "moneyInvested", "positions"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/portfolio/{docId}": {
+      "schema": "Portfolio",
+      "description": "Stores user portfolio positions and computed net worth history"
+    }
+  }
+}
