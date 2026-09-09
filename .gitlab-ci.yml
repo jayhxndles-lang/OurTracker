@@ -1,0 +1,26 @@
+# Build da app com Bun + Vite e publicação no GitLab Pages.
+# Roda automaticamente a cada commit no branch main.
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  image: oven/bun:1
+  script:
+    - |
+      set -e
+      bun install
+      # Calcula o caminho base a partir da URL do Pages ("/" ou "/ourtracker/")
+      BASE_PATH=$(echo "$CI_PAGES_URL" | sed -E 's#^https?://[^/]+##')
+      BASE_PATH="${BASE_PATH%/}/"
+      echo "URL do Pages = $CI_PAGES_URL"
+      echo "Base path = $BASE_PATH"
+      ./node_modules/.bin/vite build --base="$BASE_PATH"
+  pages:
+    publish: dist
+  artifacts:
+    paths:
+      - dist
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
