@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  --accent-color: #0066FF;
+  --accent-rgb: 0, 102, 255;
+  --accent-hover: #0052CC;
+  --accent-subtle: #EFF6FF;
+  --bg-canvas: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-tertiary: #94A3B8;
+  --border-card: #E2E8F0;
+  --gain-color: #10B981;
+  --loss-color: #EF4444;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overscroll-behavior-y: none;
+}
+
+/* Safe area padding utilities for iPhone notch / dynamic island & home bar */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* iOS glass blur */
+.ios-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Smooth 120Hz touch scrolling */
+.smooth-touch-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scroll-behavior: smooth;
+}
+
+/* Pull to refresh visual feedback */
+.pull-indicator {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  will-change: transform, opacity;
+}
+
+/* Period pill button */
+.period-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-secondary);
+  background: transparent;
+}
+
+.period-btn.active {
+  background: var(--accent-color);
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(var(--accent-rgb), 0.3);
+}
+
+/* Subtle iOS card elevation */
+.ios-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid var(--border-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* 120Hz smooth interactive buttons */
+.btn-touch {
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.1s ease;
+}
+
+.btn-touch:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+/* Animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-fast {
+  animation: spin-slow 0.8s linear infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
