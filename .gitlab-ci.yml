@@ -14,7 +14,13 @@ extrair_zip:
   script:
     - |
       set -e
-      apk add --no-cache git unzip
+      apk add --no-cache git unzip curl jq
+      echo "=== DIAGNOSTICO DO TOKEN ==="
+      echo "Tamanho do token = ${#GIT_PUSH_TOKEN} caracteres"
+      curl -s --header "PRIVATE-TOKEN: ${GIT_PUSH_TOKEN}" "${CI_API_V4_URL}/personal_access_tokens/self" | jq '{nome: .name, escopos: .scopes, ativo: .active, revogado: .revoked, expira: .expires_at}' || echo "Nao foi possivel consultar o token"
+      curl -s --header "PRIVATE-TOKEN: ${GIT_PUSH_TOKEN}" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}" | jq '{papel_no_projeto: .permissions.project_access.access_level, papel_no_grupo: .permissions.group_access.access_level, erro: .message}' || echo "Nao foi possivel consultar o projeto"
+      echo "(papel 20=Reporter, 30=Developer, 40=Maintainer, 50=Owner)"
+      echo "============================"
       ZIP=$(ls *.zip 2>/dev/null | head -n 1)
       if [ -z "$ZIP" ]; then
         echo "Nenhum arquivo .zip encontrado na raiz. Nada a fazer."
