@@ -1,0 +1,6 @@
+{
+  "name": "Johnfolio",
+  "description": "Personal investment portfolio tracker optimized for iPhone Safari with offline state handling, Getquin XLSX import, interactive net worth chart, and live quotes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
