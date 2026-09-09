@@ -1,0 +1,36 @@
+# Pipeline temporário: extrai o .zip da aplicação e envia os arquivos para o repositório.
+# Só executa quando a variável de CI GIT_PUSH_TOKEN estiver definida
+# (Settings > CI/CD > Variables). Depois de rodar, este arquivo pode ser
+# substituído por um pipeline de build/deploy.
+
+stages:
+  - extract
+
+extrair_zip:
+  stage: extract
+  image: alpine:latest
+  rules:
+    - if: $GIT_PUSH_TOKEN
+  script:
+    - apk add --no-cache git unzip
+    - ZIP=$(ls *.zip 2>/dev/null | head -n 1)
+    - if [ -z "$ZIP" ]; then echo "Nenhum arquivo .zip encontrado na raiz. Nada a fazer."; exit 0; fi
+    - echo "Extraindo $ZIP"
+    - mkdir -p /tmp/extract
+    - unzip -q "$ZIP" -d /tmp/extract
+    - rm -rf /tmp/extract/__MACOSX
+    - SRC=/tmp/extract
+    - if [ "$(ls -A "$SRC" | wc -l)" = "1" ] && [ -d "$SRC/$(ls -A "$SRC")" ]; then SRC="$SRC/$(ls -A "$SRC")"; fi
+    - echo "Pasta de origem: $SRC"
+    - rm -rf "$SRC/node_modules" "$SRC/dist" "$SRC/build" "$SRC/.git" "$SRC/.env"
+    - cp -a "$SRC"/. .
+    - rm -f "$ZIP"
+    - touch .gitignore
+    - for p in node_modules/ dist/ build/ .env; do grep -qxF "$p" .gitignore || echo "$p" >> .gitignore; done
+    - git config user.email "ci@gitlab.com"
+    - git config user.name "GitLab CI"
+    - git remote set-url origin "https://oauth2:${GIT_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+    - git add -A
+    - git commit -m "Adiciona código-fonte da aplicação (extraído de $ZIP)"
+    - git push -o ci.skip origin "HEAD:$CI_COMMIT_BRANCH"
+    - echo "Concluído! Recarregue a página do projeto."
